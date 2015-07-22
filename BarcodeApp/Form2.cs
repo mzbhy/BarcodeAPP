@@ -31,7 +31,7 @@ namespace BarcodeApp
             using (SqlConnection sqlcon = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=" + @"C:\Users\lxalxy\Documents\visual studio 2013\Projects\BarcodeApp\BarcodeApp\BarcodeDatabase.mdf" + @";Integrated Security=True;Connect Timeout=30"))
             {
                 sqlcon.Open();
-                MessageBox.Show("Open Database Connect Success");
+                MessageBox.Show("123");
             }
         }
     }

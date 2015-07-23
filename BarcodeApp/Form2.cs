@@ -21,30 +21,47 @@ namespace BarcodeApp
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            string dataDir = AppDomain.CurrentDomain.BaseDirectory;
-            if (dataDir.EndsWith(@"\bin\Debug\") || dataDir.EndsWith(@"\bin\Release\"))
+            string connStr = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=" + @"C:\Users\lxalxy\Documents\visual studio 2013\Projects\BarcodeApp\BarcodeApp\BarcodeDatabase.mdf" + @";Integrated Security=True;Connect Timeout=30";
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                dataDir = System.IO.Directory.GetParent(dataDir).Parent.Parent.FullName;
-                AppDomain.CurrentDomain.SetData("DataDirectory", dataDir);
-            }
-
-            using (SqlConnection sqlcon = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=" + @"C:\Users\lxalxy\Documents\visual studio 2013\Projects\BarcodeApp\BarcodeApp\BarcodeDatabase.mdf" + @";Integrated Security=True;Connect Timeout=30"))
-            {
-                sqlcon.Open();
-                MessageBox.Show("Open Database Connect Success");
-                //写入一条数据
-                string strUserName = "作业本";
-                string strPWD = "Ab123456";
-                using (SqlCommand sqlCmd = sqlcon.CreateCommand())
+                conn.Open();
+               // MessageBox.Show("数据库打开成功！");
+                //创建sql 查询语句  
+                string sql = "select Password from Account where Username ='" + textBoxUsername.Text + "'";
+                //创建 SqlCommand 执行指令
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    sqlCmd.CommandText = "insert into ACCOUNT(Username,Password) values (@UserName,@PWD) ";//连接字符串进行参数化
-                    SqlParameter[] sqlPara = new SqlParameter[] { 
-                    new SqlParameter("UserName",strUserName),
-                    new SqlParameter("PWD",strPWD)
-                    };
-                    sqlCmd.Parameters.AddRange(sqlPara); //把Paramerter 数组参数添加到sqlCmd中
-                    sqlCmd.ExecuteNonQuery();
-                    MessageBox.Show("Insert OK");
+                    //使用 SqlDataReader 来 读取数据库  
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        //SqlDataReader 在数据库中为 从第1条数据开始 一条一条往下读 
+                        if (sdr.Read())  //如果读取账户成功(文本框中的用户名在数据库中存在)
+                        {
+                            //则将第1条 密码 赋给 字符串pwd  ,并且依次往后读取 所有的密码
+                            //Trim()方法为移除字符串前后的空白
+                            string pwd = sdr.GetString(0).Trim();
+                            //如果 文本框中输入的密码 ==数据库中的密码
+                            if (pwd == textBoxPassword.Text)
+                            {
+                                //说明在该账户下 密码正确, 系统登录成功
+                                this.DialogResult = DialogResult.OK;         
+                            }
+                            else
+                            {
+                                //否则密码错误 再次输入密码
+                                MessageBox.Show("密码错误!请再次输入!");
+                                //并自动将当前密码 清空
+                                textBoxPassword.Text = "";
+                            }
+                        }
+                        else
+                        {
+                            //如果读取账户数据失败, 则用户名不存在
+                            MessageBox.Show("用户名不存在,请重新输入!");
+                            //并自动清空账户名
+                            textBoxUsername.Text = "";
+                        }
+                    }
                 }
             }
         }

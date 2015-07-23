@@ -16,7 +16,11 @@ namespace BarcodeApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form2());
+            DialogResult _dlgResult;
+            Form2 _frm = new Form2();
+            _dlgResult = _frm.ShowDialog();
+            if (_dlgResult == DialogResult.OK)
+                Application.Run(new Form1());
         }
     }
 }

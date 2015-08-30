@@ -72,7 +72,7 @@ namespace BarcodeApp
                 MessageBox.Show("没有可发送的数据！");
                 return;
             }
-            byte[] package = System.Text.Encoding.Default.GetBytes(MessageTx);
+            byte[] package = Encoding.Default.GetBytes(MessageTx);
             int MessageTxLength = MessageTx.Length;
             if (!mycomm.IsOpen)
             {
@@ -82,7 +82,7 @@ namespace BarcodeApp
             mycomm.Write(package, 0, MessageTxLength);
         }
 
-        private void comm_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        private void comm_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             int n = mycomm.BytesToRead;
             byte[] buf = new byte[n];//声明一个临时数组存储当前来的串口数据      
@@ -100,13 +100,14 @@ namespace BarcodeApp
                     {
                         builder.Append(b.ToString("X2") + " ");
                     }
-                    builder.Append(System.Environment.NewLine);//换行 "\r\n"
+                    builder.Append(Environment.NewLine);//换行 "\r\n"
                 }
                 //按字符串接收
                 else if (radioBtnString.Checked)
                 {
                     builder.Append(Encoding.ASCII.GetString(buf));
                 }
+
                 int lines = textBoxRx.GetLineFromCharIndex(textBoxRx.Text.Length) + 1;
                 if (lines > 30)
                     textBoxRx.Text = "";

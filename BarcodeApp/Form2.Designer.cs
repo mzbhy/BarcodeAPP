@@ -40,7 +40,7 @@
             this.btnLogin.Location = new System.Drawing.Point(98, 149);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(75, 23);
-            this.btnLogin.TabIndex = 0;
+            this.btnLogin.TabIndex = 2;
             this.btnLogin.Text = "登录";
             this.btnLogin.UseVisualStyleBackColor = true;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
@@ -68,14 +68,14 @@
             this.textBoxUsername.Location = new System.Drawing.Point(115, 53);
             this.textBoxUsername.Name = "textBoxUsername";
             this.textBoxUsername.Size = new System.Drawing.Size(100, 21);
-            this.textBoxUsername.TabIndex = 3;
+            this.textBoxUsername.TabIndex = 0;
             // 
             // textBoxPassword
             // 
             this.textBoxPassword.Location = new System.Drawing.Point(115, 93);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(100, 21);
-            this.textBoxPassword.TabIndex = 4;
+            this.textBoxPassword.TabIndex = 1;
             this.textBoxPassword.UseSystemPasswordChar = true;
             // 
             // Form2

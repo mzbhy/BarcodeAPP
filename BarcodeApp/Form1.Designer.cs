@@ -43,11 +43,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxPrice = new System.Windows.Forms.TextBox();
             this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemISBN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxPrice = new System.Windows.Forms.TextBox();
+            this.btnClear = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -193,22 +194,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(349, 109);
             this.dataGridView1.TabIndex = 12;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 394);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 12);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "总价";
-            // 
-            // textBoxPrice
-            // 
-            this.textBoxPrice.Location = new System.Drawing.Point(14, 419);
-            this.textBoxPrice.Name = "textBoxPrice";
-            this.textBoxPrice.Size = new System.Drawing.Size(100, 21);
-            this.textBoxPrice.TabIndex = 14;
-            // 
             // ItemName
             // 
             this.ItemName.HeaderText = "名称";
@@ -224,11 +209,39 @@
             this.ItemPrice.HeaderText = "价格";
             this.ItemPrice.Name = "ItemPrice";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 394);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 12);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "总价";
+            // 
+            // textBoxPrice
+            // 
+            this.textBoxPrice.Location = new System.Drawing.Point(14, 419);
+            this.textBoxPrice.Name = "textBoxPrice";
+            this.textBoxPrice.Size = new System.Drawing.Size(100, 21);
+            this.textBoxPrice.TabIndex = 14;
+            this.textBoxPrice.Text = "0.0";
+            // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(49, 389);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.TabIndex = 15;
+            this.btnClear.Text = "清空";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(512, 475);
+            this.Controls.Add(this.btnClear);
             this.Controls.Add(this.textBoxPrice);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.dataGridView1);
@@ -274,6 +287,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemISBN;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemPrice;
+        private System.Windows.Forms.Button btnClear;
     }
 }
 

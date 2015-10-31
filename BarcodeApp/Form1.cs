@@ -138,6 +138,9 @@ namespace BarcodeApp
                                 dataGridView1.Rows.Add(row);
                                 dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 1;
                                 float total_price = float.Parse(textBoxPrice.Text);
+                                int total_num = int.Parse(textBoxNum.Text);
+                                total_num++;
+                                textBoxNum.Text = total_num.ToString();
                                 total_price = total_price + float.Parse(price);
                                 textBoxPrice.Text = total_price.ToString();
                             }
@@ -198,7 +201,14 @@ namespace BarcodeApp
         private void btnClear_Click(object sender, EventArgs e)
         {
             textBoxPrice.Text = "0.0";
+            textBoxNum.Text = "0";
             dataGridView1.Rows.Clear();
+        }
+
+        private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            SolidBrush b = new SolidBrush(this.dataGridView1.RowHeadersDefaultCellStyle.ForeColor);
+            e.Graphics.DrawString((e.RowIndex + 1).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.dataGridView1.DefaultCellStyle.Font, b, e.RowBounds.Location.X + 20, e.RowBounds.Location.Y + 4);
         }
     }
 }

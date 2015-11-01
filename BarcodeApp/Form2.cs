@@ -63,6 +63,7 @@ namespace BarcodeApp
                         }
                     }
                 }
+                conn.Close();
             }
         }
     }

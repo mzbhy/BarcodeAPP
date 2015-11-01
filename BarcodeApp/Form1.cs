@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
+using System.Data.SqlClient;
 
 namespace BarcodeApp
 {
@@ -72,7 +73,7 @@ namespace BarcodeApp
                 MessageBox.Show("没有可发送的数据！");
                 return;
             }
-            byte[] package = System.Text.Encoding.Default.GetBytes(MessageTx);
+            byte[] package = Encoding.Default.GetBytes(MessageTx);
             int MessageTxLength = MessageTx.Length;
             if (!mycomm.IsOpen)
             {
@@ -82,10 +83,13 @@ namespace BarcodeApp
             mycomm.Write(package, 0, MessageTxLength);
         }
 
-        private void comm_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        private void comm_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             int n = mycomm.BytesToRead;
-            byte[] buf = new byte[n];//声明一个临时数组存储当前来的串口数据      
+            byte[] buf = new byte[n];//声明一个临时数组存储当前来的串口数据    
+
+            string name = null;
+            string price = null;
 
             mycomm.Read(buf, 0, n);//读取缓冲数据
             builder.Clear();//清除字符串构造器的内容
@@ -100,12 +104,54 @@ namespace BarcodeApp
                     {
                         builder.Append(b.ToString("X2") + " ");
                     }
-                    builder.Append(System.Environment.NewLine);//换行 "\r\n"
+                    builder.Append(Environment.NewLine);//换行 "\r\n"
                 }
                 //按字符串接收
                 else if (radioBtnString.Checked)
                 {
                     builder.Append(Encoding.ASCII.GetString(buf));
+                }
+
+                string connStr = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=" + @"C:\Users\lxalxy\Documents\visual studio 2015\Projects\BarcodeApp\BarcodeApp\BarcodeDatabase.mdf" + @";Integrated Security=True;Connect Timeout=30";
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
+                    //MessageBox.Show("数据库打开成功！");
+                    //创建sql 查询语句  
+                    string sql = "select * from Item where ISBN ='" + builder.ToString() + "'";
+                    //创建 SqlCommand 执行指令
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        //使用 SqlDataReader 来 读取数据库  
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            //SqlDataReader 在数据库中为 从第1条数据开始 一条一条往下读 
+                            if (sdr.Read())  //如果读取成功
+                            {
+                                //Trim()方法为移除字符串前后的空白
+                                name = sdr.GetString(1).Trim();
+                                //此处需要注意：SQL中的float对应C#里的double，所以需要用GetDouble方法
+                                price = sdr.GetDouble(3).ToString();
+                                //将上面三个变量合成一个数组
+                                string[] row = { name, builder.ToString(), price};
+                                //给dataGridView1控件添加数据
+                                dataGridView1.Rows.Add(row);
+                                dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 1;
+                                float total_price = float.Parse(textBoxPrice.Text);
+                                int total_num = int.Parse(textBoxNum.Text);
+                                total_num++;
+                                textBoxNum.Text = total_num.ToString();
+                                total_price = total_price + float.Parse(price);
+                                textBoxPrice.Text = total_price.ToString();
+                            }
+                            else
+                            {
+                                //如果读取数据失败, 则不存在
+                                MessageBox.Show("ISBN不存在，请重新输入！", "错误！", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    conn.Close();
                 }
                 int lines = textBoxRx.GetLineFromCharIndex(textBoxRx.Text.Length) + 1;
                 if (lines > 30)
@@ -150,6 +196,19 @@ namespace BarcodeApp
                 lblToolStripStatus.Text = "串口已关闭";
             }
             mycomm.BaudRate = int.Parse(comboBoxBaudSelect.Text);
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            textBoxPrice.Text = "0.0";
+            textBoxNum.Text = "0";
+            dataGridView1.Rows.Clear();
+        }
+
+        private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            SolidBrush b = new SolidBrush(this.dataGridView1.RowHeadersDefaultCellStyle.ForeColor);
+            e.Graphics.DrawString((e.RowIndex + 1).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.dataGridView1.DefaultCellStyle.Font, b, e.RowBounds.Location.X + 20, e.RowBounds.Location.Y + 4);
         }
     }
 }
